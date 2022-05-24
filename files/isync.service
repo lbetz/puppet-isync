@@ -1,0 +1,19 @@
+[Unit]
+Description = SyncService
+After = network.target
+
+[Service]
+PIDFile = /run/isync.pid
+User = root
+Group = root
+WorkingDirectory = /opt
+ExecStartPre = /bin/mkdir /run/isync
+ExecStartPre = /bin/chown -R root:root /run/isync
+ExecStart = /usr/local/bin/isync.sh
+ExecReload = /bin/kill -s HUP $MAINPID
+ExecStop = /bin/kill -s TERM $MAINPID
+ExecStopPost = /bin/rm -rf /run/isync
+PrivateTmp = true
+
+[Install]
+WantedBy = multi-user.target
